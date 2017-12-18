@@ -1,0 +1,168 @@
+body {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1400px;
+    width: calc(100% - 40px);
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#title {
+    font-weight: 900;
+    /* font-style: italic; */
+    font-size: 60px;
+    color: #CB272E;
+    line-height: 100%;
+    padding-bottom: 5px;
+}
+
+.sub-title {
+    font-weight: 300;
+    font-size: 18px;
+    color: #a1a1a1;
+    line-height: 150%;
+}
+
+.sub-title.nl {
+    display: none;
+}
+
+.top-2000 {
+    font-weight: 400;
+    /* font-style: italic; */
+    color: #CB272E;  
+}
+
+@media screen and (max-width: 500px) {
+    #container {
+        width: calc(100% - 20px);
+    }
+    #title {
+        padding-bottom: 20px;
+    }
+}
+
+/********** Chart **********/
+
+#chart {
+    position: relative;
+    text-align: center;
+}
+
+svg {
+    position: absolute;
+    top: 0px;
+    /* left: 0px; */
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: visible;
+}
+
+canvas {
+    position: absolute;
+    top: 0px;
+    /* left: 0px; */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.center-title {
+    font-weight: 700;
+    font-style: italic;
+    text-anchor: middle;
+    fill: white;
+}
+
+.center-text-around {
+    font-weight: 300;
+    fill: white;
+    opacity: 0.7;
+}
+
+.axis-label {
+    text-anchor: middle;
+    fill: #dedede;
+}
+
+.axis-year-title {
+    text-anchor: middle;
+    fill: black;
+}
+
+.axis-year-label {
+    text-anchor: middle;
+    fill: #c1c1c1;
+}
+
+.axis-year-line {
+    opacity: 0.4;
+    stroke: #c1c1c1;
+}
+
+.size-legend-label {
+    text-anchor: middle;
+}
+
+.size-legend-circle {
+    mix-blend-mode: multiply;
+    fill: #d2d2d2;
+    stroke-opacity: 0.7;
+    stroke-width: 1.5px;
+}
+
+/********** Credit **********/
+
+.credit {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 20px;
+    border-top: 1px dotted rgba(203, 39, 46, 0.5);
+}
+
+.credit div {
+    width: 25%;
+    font-weight: 300;
+    font-size: 14px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.credit.nl {
+    display: none;
+}
+
+@media screen and (max-width: 500px) {
+    .credit div {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+.divider {
+    font-weight: 700;
+    font-size: 1em;
+    padding: 0px 5px;
+    font-style: normal;
+    color: #a3a3a3;
+}
+
+a, a:link, a:visited, a:active {
+    color: #CB272E;
+    border-bottom: 1px dotted rgba(203, 39, 46, 0.5);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid #CB272E;
+}
