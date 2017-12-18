@@ -126,7 +126,7 @@ canvas {
     mix-blend-mode: multiply;
     fill: #d2d2d2;
     stroke-opacity: 0.7;
-    stroke-width: 1.5px;
+    /* stroke-width: 1.5px; */
 }
 .size-legend-circle-center {
     /* mix-blend-mode: multiply; */
@@ -134,28 +134,32 @@ canvas {
 }
 
 .artist-circle {
-    fill: none;
+    fill: white;
     stroke: #CB272E;
-    stroke-width: 2px;
-    opacity: 0.8;
+    /* stroke-width: 2px; */
+    fill-opacity: 0.6;
+    stroke-opacity: 0.8;
     mix-blend-mode: multiply;
+    cursor: default;
 }
 .hovered-artist-circle {
-    opacity: 1;
-    stroke-width: 3px;
+    stroke-opacity: 1;
+    /* stroke-width: 3px; */
+    fill: #CB272E;
 }
 
 .artist-center-circle {
     fill: #CB272E;
-    mix-blend-mode: multiply;
+    /* mix-blend-mode: multiply; */
 }
 
 .artist-path {
     fill: none;
     stroke: #CB272E;
-    stroke-width: 2px;
+    /* stroke-width: 2px; */
     opacity: 0.7;
-    mix-blend-mode: multiply;
+    /* mix-blend-mode: multiply; */
+    stroke-linecap: round;
 }
 
 /********** Credit **********/
@@ -183,7 +187,7 @@ canvas {
     display: none;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
     .credit div {
         width: 100%;
         text-align: left;

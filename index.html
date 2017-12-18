@@ -5,35 +5,35 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <!-- <meta name="viewport" content="user-scalable = yes"> -->
 
-	    <title>Top 2000</title>
+	    <title>Top 2000 - Music for all ages</title>
 		<meta name="author" content="Nadieh Bremer">
-		<!-- <meta name="description" content="Data Sketches - June - Fun - Nadieh">
-		<meta name="keywords" content="data, visualization, visualisation, data visualization, data visualisation, information, information visualization, information visualisation, dataviz, datavis, infoviz, infovis, collaboration, data art">
+		<meta name="description" content="Visualizing all the songs from the TOP 2000 according to their release years">
+		<meta name="keywords" content="music, song, top 2000, radio 2, data, visualization, visualisation, data visualization, data visualisation, information, information visualization, information visualisation, dataviz, datavis, infoviz, infovis, data art">
 		
-		<meta property="og:title" content="Cardcaptor Sakura - Fifty chapters of adorable cuteness">
-		<meta property="og:site_name" content="data sketch|es">
-		<meta property="og:url" content="http://www.datasketch.es/june/code/nadieh">
-		<meta property="og:description" content="Discover all of Cardcaptor Sakura and see why it's one of the most beautiful manga ever made">
+		<meta property="og:title" content="Top 2000 - Music for all ages">
+		<meta property="og:site_name" content="Visual Cinnamon">
+		<meta property="og:url" content="https://nbremer.github.io/top2000vinyl/">
+		<meta property="og:description" content="Discover the 2000 best songs ever created according to their year of release, see the history of the artists and what years produced exceptionally good songs">
 		<meta property="og:type" content="article">
 		<meta property="og:locale" content="en_US">
-		<meta property="og:image" content="http://www.datasketch.es/june/code/nadieh/img/ccs_feature.jpg">
+		<!-- <meta property="og:image" content="http://www.datasketch.es/june/code/nadieh/img/ccs_feature.jpg"> -->
 		<meta property="og:image:type" content="image/jpeg">
-		<meta property="og:image:width" content="1920">
-		<meta property="og:image:height" content="1080">
+		<!-- <meta property="og:image:width" content="1920"> -->
+		<!-- <meta property="og:image:height" content="1080"> -->
 		
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:site" content="@datasketches">
+		<meta name="twitter:site" content="@NadiehBremer">
 		<meta name="twitter:creator" content="@NadiehBremer">
-		<meta name="twitter:title" content="Cardcaptor Sakura - Fifty chapters of adorable cuteness">
-		<meta name="twitter:description" content="Discover all of Cardcaptor Sakura and see why it's one of the most beautiful manga ever made">
-		<meta name="twitter:image:src" content="http://www.datasketch.es/june/code/nadieh/img/ccs_feature.jpg"> -->
+		<meta name="twitter:title" content="Top 2000 - Music for all ages">
+		<meta name="twitter:description" content="Discover the 2000 best songs ever created according to their year of release, see the history of the artists and what years produced exceptionally good songs">
+		<!-- <meta name="twitter:image:src" content="http://www.datasketch.es/june/code/nadieh/img/ccs_feature.jpg"> -->
 
 		<!-- JavaScript files -->
 		<script src="plugins/d3.min.js"></script>
 		<script src="plugins/lodash.min.js"></script>
 		
 		<!-- Custom scripts -->
-		<!-- <script src="js/main.js"></script> -->
+		<script src="js/main.js"></script>
 		
 		<!-- Styling -->
 		<link href="css/style.css" rel="stylesheet">
@@ -45,14 +45,14 @@
 	<body>
 		
 		<div class="container">
+			<!-- Title and intro -->
 			<div id="title">Music for all ages</div>
 			<div class="sub-title en">All songs from the <span class="top-2000">TOP 2000</span> of 2017 according to their release years</div>
 			<div class="sub-title nl">Alle nummers uit de <span class="top-2000">TOP 2000</span> van 2017 volgens jaar van uitgave</div>
-		</div>
 
-		<div id="chart"></div>
+			<!-- Chart -->
+			<div id="chart"></div>
 
-		<div class="container">
 			<!-- Credits & Data -->
 			<div class="credit en">
 				<div>
@@ -85,13 +85,20 @@
 					Bekijk ook mijn Top 2000 visualisaties uit <a href="http://www.datasketch.es/december/code/nadieh/img/Top2000PosterEnglish.png" target="_new">2016</a> & <a href="http://nbremer.github.io/top2000/" target="_new">2015</a> 
 				</div>
 			</div>
+
 		</div>
 
-
-		<script src="js/main.js"></script>
-
 		<script>
-
+			document.onreadystatechange = function(){
+				if (document.readyState === "complete") {
+					create_top2000_visual();
+				}
+				else {
+					window.onload = function () {
+						create_top2000_visual();
+					};
+				};
+			}//function
 			// var current_width = window.innerWidth;
         	// d3.select(window).on('resize', function() {
 			// 	//Only resize if the width is changed, not the height
