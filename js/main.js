@@ -341,7 +341,7 @@ function create_top2000_visual() {
         : "A visualization of all 2000 songs from NPO Radio 2's Top 2000. Each song is placed according to its release year. The Top 2000 has been on Dutch Radio between Christmas & New Year's since 1999");
 
     //Add TOP 2000 text
-    center_title_group.append("text")
+    var title = center_title_group.append("text")
         .attr("class", "center-title")
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
@@ -397,14 +397,14 @@ function create_top2000_visual() {
 
     var size_legend_group = chart.append("g")
         .attr("class", "size-legend-group")
-        .attr("transform", "translate(" + (-width/2 + 50) + "," + (height/2 - 80) + ")");
+        .attr("transform", "translate(" + (-width/2 + 50 * size_factor) + "," + (height/2 - 80 * size_factor) + ")");
 
     size_legend_group.append("text")
         .attr("class", "size-legend-title")
-        .attr("x", -35)
-        .attr("y", -50)
+        .attr("x", -35 * size_factor)
+        .attr("y", -50 * size_factor)
         .style("font-size", (16 * size_factor) + "px")
-        .text(lang === "nl" ? "Positie in de Top 2000" : "Position in Top 2000");
+        .text(lang === "nl" ? "Positie in de Top 2000" : "Position in the Top 2000");
 
     //Add circles
     // var size_distance = [13, 86, 141, 184, 218, 246, 271, 296, 321];
@@ -432,7 +432,7 @@ function create_top2000_visual() {
         .enter().append("text")
         .attr("class", "size-legend-label")
         .attr("x", function (d, i) { return size_distance[i]; })
-        .attr("y", 65)
+        .attr("y", 65 * size_factor)
         .attr("dy", "0.35em")
         .style("font-size", function (d, i) { return i <= 3 ? (size_font[i] * size_factor) + "px" : (11 * size_factor) + "px"; })
         .text(function (d) { return d; })
@@ -568,7 +568,6 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
     var line = d3.lineRadial()
         .angle(function (d) { return d.angle; })
         .radius(function (d) { return d.radius; })
-        // .curve(d3.curveCatmullRom.alpha(1))
 
     svg.on("touchmove mousemove", function () {
         d3.event.stopPropagation();
@@ -580,7 +579,7 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
             d3.event.preventDefault();
             show_highlight_artist(found) 
         } 
-        else if(width < ww) { reset_chart() } //On a drag it doesn't reset for smaller screens
+        else if(width < ww) { title.style("fill","green"); reset_chart() } //On a drag it doesn't reset for smaller screens
 
     })//on mousemove
 
@@ -592,7 +591,7 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
         var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
         if (found) { show_highlight_artist(found) } 
-        else { reset_chart() }
+        else { title.style("fill","pink"); reset_chart() }
     })//on click
 
     //Mostly for mobile - to reset al when you click on mobile
@@ -697,7 +696,6 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
 
     //Function to reset all back to normal
     function reset_chart() {
-        d3.event.stopPropagation();
         //Remove the highlighting lines and circles
         chart_group.selectAll(".artist-circle-group, .artist-path").remove()
         hover_text_group.style("opacity", 0)
