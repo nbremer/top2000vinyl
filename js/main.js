@@ -576,7 +576,10 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
         var m = d3.mouse(this);
         var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
-        if (found) { show_highlight_artist(found) } 
+        if (found) { 
+            d3.event.preventDefault();
+            show_highlight_artist(found) 
+        } 
         else if(width < ww) { reset_chart() } //On a drag it doesn't reset for smaller screens
 
     })//on mousemove
