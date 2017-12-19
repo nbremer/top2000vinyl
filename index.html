@@ -89,16 +89,20 @@
 		</div>
 
 		<script>
-			document.onreadystatechange = function(){
-				if (document.readyState === "complete") {
-					create_top2000_visual();
-				}
-				else {
-					window.onload = function () {
-						create_top2000_visual();
-					};
-				};
-			}//function
+			window.onload = function () {
+				create_top2000_visual()
+			};
+
+			// document.onreadystatechange = function(){
+			// 	if (document.readyState === "complete") {
+			// 		create_top2000_visual();
+			// 	}
+			// 	else {
+			// 		window.onload = function () {
+			// 			create_top2000_visual();
+			// 		};
+			// 	};
+			// }//function
 			// var current_width = window.innerWidth;
         	// d3.select(window).on('resize', function() {
 			// 	//Only resize if the width is changed, not the height
