@@ -76,11 +76,11 @@ function create_top2000_visual() {
 
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width > ww) {
-        d3.selectAll("svg, canvas")
+        d3.selectAll("canvas")
             .style("left", 0)
             .style("transform", "translate(0,0)")
     } else {
-        d3.selectAll("svg, canvas")
+        d3.selectAll("canvas")
             .style("left", "50%")
             .style("transform", "translateX(-50%)")
     }//else

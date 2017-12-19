@@ -56,8 +56,8 @@ body {
 }
 
 svg {
-    position: absolute;
-    top: 0px;
+    /* position: absolute; */
+    /* top: 0px; */
     /* left: 0px; */
     left: 50%;
     transform: translateX(-50%);
