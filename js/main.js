@@ -577,23 +577,23 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
         .angle(function (d) { return d.angle; })
         .radius(function (d) { return d.radius; })
 
-    svg.on("touchmove mousemove", function () {
-        d3.event.stopPropagation();
-        //Find the nearest song to the mouse, within a distance of X pixels
-        var m = d3.mouse(this);
-        var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+    // svg.on("touchmove mousemove", function () {
+    //     d3.event.stopPropagation();
+    //     //Find the nearest song to the mouse, within a distance of X pixels
+    //     var m = d3.mouse(this);
+    //     var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
-        title.style("fill","blue"); 
-        if (found) { 
-            d3.event.preventDefault();
-            show_highlight_artist(found) 
-        } 
-        else if(width < ww) { title.style("fill","green"); reset_chart() } //On a drag it doesn't reset for smaller screens
+    //     title.style("fill","blue"); 
+    //     if (found) { 
+    //         d3.event.preventDefault();
+    //         show_highlight_artist(found) 
+    //     } 
+    //     else if(width < ww) { title.style("fill","green"); reset_chart() } //On a drag it doesn't reset for smaller screens
 
-    })//on mousemove
+    // })//on mousemove
 
     //Mostly for mobile - if you click anywhere outside of a circle, it resets
-    svg.on("click", function() {
+    svg.on("mouseover", function() {
         d3.event.stopPropagation();
         //Find the nearest song to the mouse, within a distance of X pixels
         var m = d3.mouse(this);
