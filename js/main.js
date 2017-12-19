@@ -354,7 +354,7 @@ function create_top2000_visual() {
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
         .style("font-size", (55 * size_factor) + "px")
-        .text("TOP 2000");
+        .text("TOP 2001");
 
     //////////////////////////////////////////////////////////////
     ////////////////// Add hover text in center //////////////////
@@ -593,14 +593,15 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
     // })//on mousemove
 
     //Mostly for mobile - if you click anywhere outside of a circle, it resets
-    background_rect.on("mouseover", function() {
+    background_rect.on("mouseover click", function() {
 
         title.style("fill","orange");
 
         d3.event.stopPropagation();
         //Find the nearest song to the mouse, within a distance of X pixels
         var m = d3.mouse(this);
-        var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+        var found = diagram.find(m[0], m[1], 50 * size_factor);
+        // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
         if (found) { show_highlight_artist(found) } 
         else { title.style("fill","pink"); reset_chart() }

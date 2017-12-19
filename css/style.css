@@ -80,6 +80,10 @@ canvas {
     pointer-events: all;
 }
 
+.chart-group {
+    pointer-events: none;
+}
+
 .center-title {
     font-weight: 700;
     font-style: italic;
