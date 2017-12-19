@@ -66,6 +66,14 @@ function create_top2000_visual() {
     var chart = svg.append("g")
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
 
+    //Test for capturing mouse events
+    chart.append("rect")
+        .attr("class", "background-rect")
+        .attr("x", -width/2)
+        .attr("y", -height/2)
+        .attr("width", width)
+        .attr("height", height)
+
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width > ww) {
         d3.selectAll("svg, canvas")
@@ -397,7 +405,7 @@ function create_top2000_visual() {
 
     var size_legend_group = chart.append("g")
         .attr("class", "size-legend-group")
-        .attr("transform", "translate(" + (-width/2 + 50 * size_factor) + "," + (height/2 - 80 * size_factor) + ")");
+        .attr("transform", "translate(" + (-width/2 + 70 * size_factor) + "," + (height/2 - 80 * size_factor) + ")");
 
     size_legend_group.append("text")
         .attr("class", "size-legend-title")
@@ -575,6 +583,7 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
         var m = d3.mouse(this);
         var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
+        title.style("fill","blue"); 
         if (found) { 
             d3.event.preventDefault();
             show_highlight_artist(found) 
@@ -589,6 +598,8 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
         //Find the nearest song to the mouse, within a distance of X pixels
         var m = d3.mouse(this);
         var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+
+        title.style("fill","orange");
 
         if (found) { show_highlight_artist(found) } 
         else { title.style("fill","pink"); reset_chart() }
