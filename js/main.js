@@ -238,7 +238,7 @@ function create_top2000_visual() {
     //Create track (axis) rings
     ctx.strokeStyle = "black";
     ctx.globalAlpha = 0.4;
-    ctx.lineWidth = 1.5 * size_factor;
+    ctx.lineWidth = 1.75 * size_factor;
     for(var i = 0; i < axis.length; i++) {
         ctx.beginPath();
         ctx.arc(0, 0, inner_radius + step_size * axis[i], 0, pi2, false);
@@ -273,7 +273,7 @@ function create_top2000_visual() {
         .style("font-size", (13 * size_factor) + "px")
         .append("textPath")
         .attr("xlink:href", function(d) { return "#axis-path-" + d; })
-        .attr("startOffset", "8%")
+        .attr("startOffset", "8.2%")
         .text(function(d,i) { return i === axis.length-2 ? lang === "nl" ? "Aantal liedjes" : "Number of songs" : d; });
 
     //////////////////////////////////////////////////////////////
@@ -482,10 +482,12 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
             //Keep check of the maximum height for the axis line, if needed
             if(_.indexOf(year_axis, i) >= 0) max_height = inner_radius + step_size * j + radius_scale(s.rank);
     
+            //Save some position variables
             s.angle = a;
             s.radius = inner_radius + step_size * j;
             s.x = s.radius * Math.cos(a - pi1_2);
             s.y = s.radius * Math.sin(a - pi1_2);
+            //TODO Also save this information in the "artist" dataset
 
             //Draw the bigger - rank based circles
             ctx.globalAlpha = opacity_scale(s.rank);
@@ -580,18 +582,18 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
     })//on mousemove
 
     //Mostly for mobile - if you click anywhere outside of a circle, it resets
-    d3.select("svg").on("click", function() {
+    svg.on("click", function() {
         d3.event.stopPropagation();
         //Find the nearest song to the mouse, within a distance of X pixels
         var m = d3.mouse(this);
-        var found = diagram.find(m[0] - width/2, m[1] - height/2, 50);
+        var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
         if (found) { show_highlight_artist(found) } 
         else { reset_chart() }
     })//on click
 
     //Mostly for mobile - to reset al when you click on mobile
-    d3.select("body").on("click", reset_chart);
+    //d3.select("body").on("click", reset_chart);
 
     //////////////////////////////////////////////////////////////
     ///////////////////// Interaction functions //////////////////
@@ -670,7 +672,7 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
             .attr("cx", function (d) { return d.x; })
             .attr("cy", function (d) { return d.y; })
             .attr("r", function (d) { return radius_scale(d.rank); })
-            .style("stroke-width", function(d) { return (d.rank === data[found.index].rank ? 3 : 2) * size_factor; })
+            .style("stroke-width", function(d) { return (d.rank === data[found.index].rank ? 4 : 3) * size_factor; })
 
         //Make the center circle of the hovered song more visible
         artist_circle_group.append("circle")
