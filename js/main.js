@@ -67,7 +67,7 @@ function create_top2000_visual() {
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
 
     //Test for capturing mouse events
-    chart.append("rect")
+    var background_rect = chart.append("rect")
         .attr("class", "background-rect")
         .attr("x", -width/2)
         .attr("y", -height/2)
@@ -593,13 +593,14 @@ d3.csv("data/top2000_2016.csv", function (error, data) {
     // })//on mousemove
 
     //Mostly for mobile - if you click anywhere outside of a circle, it resets
-    svg.on("mouseover", function() {
+    background_rect.on("mouseover", function() {
+
+        title.style("fill","orange");
+
         d3.event.stopPropagation();
         //Find the nearest song to the mouse, within a distance of X pixels
         var m = d3.mouse(this);
         var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-
-        title.style("fill","orange");
 
         if (found) { show_highlight_artist(found) } 
         else { title.style("fill","pink"); reset_chart() }
