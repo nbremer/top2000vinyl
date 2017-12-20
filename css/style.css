@@ -1,13 +1,11 @@
+html {
+    --annotation-title-font-size: 15px;
+    --annotation-label-font-size: 12px;
+}
+
 body {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
 }
 
 .container {
@@ -31,7 +29,7 @@ html, body {
 .sub-title {
     font-weight: 300;
     font-size: 18px;
-    color: #a1a1a1;
+    color: #797979;
     line-height: 150%;
 }
 
@@ -46,7 +44,7 @@ html, body {
 }
 
 .explanation {
-    margin-top: 40px;
+    margin-top: 0px;
     margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
@@ -82,7 +80,7 @@ html, body {
 #chart {
     position: relative;
     text-align: center;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
 }
 
 svg, canvas {
@@ -153,25 +151,24 @@ canvas {
     stroke: #c1c1c1;
 }
 
+
 .size-legend-label {
     text-anchor: middle;
+    fill: #696969
 }
 
 .size-legend-circle {
     mix-blend-mode: multiply;
     fill: #d2d2d2;
-    stroke-opacity: 0.7;
-    /* stroke-width: 1.5px; */
+    stroke-opacity: 1;
 }
 .size-legend-circle-center {
-    /* mix-blend-mode: multiply; */
     fill: white;
 }
 
 .artist-circle {
     fill: white;
     stroke: #CB272E;
-    /* stroke-width: 2px; */
     fill-opacity: 0.5;
     stroke-opacity: 0.8;
     mix-blend-mode: multiply;
@@ -179,21 +176,38 @@ canvas {
 }
 .hovered-artist-circle {
     stroke-opacity: 1;
-    /* stroke-width: 3px; */
     fill: #CB272E;
 }
 
 .artist-center-circle {
     fill: #CB272E;
-    /* mix-blend-mode: multiply; */
 }
 
 .artist-path {
     fill: none;
     stroke: #CB272E;
-    /* stroke-width: 2px; */
     opacity: 0.7;
-    /* mix-blend-mode: multiply; */
+    stroke-linecap: round;
+}
+
+.annotation-group {
+    pointer-events: none;
+    cursor: default;
+}
+.annotation-note-title {
+    font-size: 14px;
+    font-size: var(--annotation-title-font-size);
+    font-weight: 700;
+    font-style: italic;
+    fill: #CB272E;
+}
+.annotation-note-label {
+    font-size: 11px;
+    font-size: var(--annotation-label-font-size);
+    fill: #afafaf;
+}
+.annotations path {
+    stroke: #CB272E;
     stroke-linecap: round;
 }
 

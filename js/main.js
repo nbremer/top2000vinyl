@@ -1,9 +1,3 @@
-// TODO: Annotate the top 10 songs?
-
-// Finalize
-// TODO: Turn all English words into Dutch version
-// TODO: Fill in header meta data + create image for sharing if title is final
-
 function create_top2000_visual() {
 
     var container = d3.select("#chart")
@@ -32,10 +26,12 @@ function create_top2000_visual() {
         else width = ww/0.8;
     }//else
     width = Math.round(Math.min(base_width, width))
-    var height = width
 
     //How much smaller is this visual than the original
     var size_factor = _.round(width/base_width,3)
+
+    //Add padding to the height for the legend
+    var height = width + (280 * size_factor)
 
     ////////////////////////////////////////////////////////////// 
     //////////////////////// Create SVG //////////////////////////
@@ -63,14 +59,6 @@ function create_top2000_visual() {
 
     var chart = svg.append("g")
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
-
-    // //Test for capturing mouse events
-    // var background_rect = chart.append("rect")
-    //     .attr("class", "background-rect")
-    //     .attr("x", -width/2)
-    //     .attr("y", -height/2)
-    //     .attr("width", width)
-    //     .attr("height", height)
 
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width < ww) {
@@ -408,13 +396,13 @@ function create_top2000_visual() {
 
     var size_legend_group = chart.append("g")
         .attr("class", "size-legend-group")
-        .attr("transform", "translate(" + (-width/2 + 70 * size_factor) + "," + (height/2 - 80 * size_factor) + ")");
+        .attr("transform", "translate(" + (-width/2 + 40 * size_factor) + "," + (-height/2 + 120 * size_factor) + ")");
 
     size_legend_group.append("text")
         .attr("class", "size-legend-title")
         .attr("x", -35 * size_factor)
-        .attr("y", -50 * size_factor)
-        .style("font-size", (16 * size_factor) + "px")
+        .attr("y", -55 * size_factor)
+        .style("font-size", (15 * size_factor) + "px")
         .text(lang === "nl" ? "Positie in de Top 2000" : "Position in the Top 2000");
 
     //Add circles
@@ -437,7 +425,7 @@ function create_top2000_visual() {
         .attr("r", function(d,i) { return mini_circle_radius * (i < 4 ? 1.5 : 1); })
 
     //Add numbers below
-    var size_font = [14, 14, 13, 12];
+    var size_font = [13, 12.5, 12, 12];
     size_legend_group.selectAll(".size-legend-label")
         .data(radius_scale.domain())
         .enter().append("text")
@@ -568,6 +556,150 @@ function create_top2000_visual() {
             .style("stroke-width", 1 * size_factor)
             .style("mix-blend-mode", "screen")
 
+
+        //////////////////////////////////////////////////////////////
+        /////////////////// Create top 10 annotations ////////////////
+        //////////////////////////////////////////////////////////////
+
+        document.querySelector('html').style.setProperty('--annotation-title-font-size', (14 * size_factor) + 'px')
+        document.querySelector('html').style.setProperty('--annotation-label-font-size', (11 * size_factor) + 'px')
+
+        // 1,"Bohemian Rhapsody","Queen",1975
+        // 2,"Hotel California","Eagles",1977
+        // 3,"Stairway To Heaven","Led Zeppelin",1971
+        // 4,"Piano Man","Billy Joel",1974
+        // 5,"Child In Time","Deep Purple",1972
+        // 6,"Black","Pearl Jam",1991
+        // 7,"Wish You Were Here","Pink Floyd",1975
+        // 8,"Fix You","Coldplay",2005
+        // 9,"Avond","Boudewijn de Groot",1997
+        // 10,"November Rain","Guns N' Roses",1992
+
+        var annotations = [
+            {
+                note: {
+                    title: "1. Queen",
+                    label: "Bohemian Rhapsody",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 304 * size_factor,
+                y: 346 * size_factor,
+                dx: 44 * size_factor,
+                dy: 21 * size_factor
+            },{
+                note: {
+                    title: "2. Eagles",
+                    label: "Hotel California",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 231 * size_factor,
+                y: 483 * size_factor,
+                dx: -13 * size_factor,
+                dy: 57 * size_factor
+            },{
+                note: {
+                    title: "3. Led Zeppelin",
+                    label: "Stairway To Heaven",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 466 * size_factor,
+                y: 228 * size_factor,
+                dx: 23 * size_factor,
+                dy: -36 * size_factor
+            },{
+                note: {
+                    title: "4. Billy Joel",
+                    label: "Piano Man",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 278 * size_factor,
+                y: 272 * size_factor,
+                dx: 86 * size_factor,
+                dy: 49 * size_factor
+            },{
+                note: {
+                    title: "5. Deep Purple",
+                    label: "Child In Time",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 379 * size_factor,
+                y: 256 * size_factor,
+                dx: 68 * size_factor,
+                dy: 28 * size_factor
+            },{
+                note: {
+                    title: "6. Pearl Jam",
+                    label: "Black",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: -332 * size_factor,
+                y: 267 * size_factor,
+                dx: -41 * size_factor,
+                dy: 18 * size_factor
+            },{
+                note: {
+                    title: "7. Pink Floyd",
+                    label: "Wish You Were Here",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: 270 * size_factor,
+                y: 353 * size_factor,
+                dx: 16 * size_factor,
+                dy: 61 * size_factor
+            },{
+                note: {
+                    title: "8. Coldplay",
+                    label: "Fix You",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: -271 * size_factor,
+                y: -255 * size_factor,
+                dx: -21 * size_factor,
+                dy: -34 * size_factor
+            },{
+                note: {
+                    title: "9. Boudewijn de Groot",
+                    label: "Avond",
+                    padding: 5 * size_factor,
+                    wrap: 250 * size_factor
+                },
+                className: "annotation-top-10",
+                x: -398 * size_factor,
+                y: 16 * size_factor,
+                dx: -43 * size_factor,
+                dy: -16 * size_factor
+            },{
+                note: {
+                    title: "10. Guns N' Roses",
+                    label: "November Rain",
+                    padding: 5 * size_factor
+                },
+                className: "annotation-top-10",
+                x: -374 * size_factor,
+                y: 232 * size_factor,
+                dx: -49 * size_factor,
+                dy: -15 * size_factor
+            }
+        ];
+
+        //Set-up the annotation maker
+        var makeAnnotations = d3.annotation()
+            //.editMode(true)
+            .type(d3.annotationCalloutElbow)
+            .annotations(annotations);
+
+        //Call and create the textual part of the annotations
+        var annotation_group = chart.append("g").attr("class", "annotation-group");
+        annotation_group.call(makeAnnotations);
+
         //////////////////////////////////////////////////////////////
         //////////////////// Set-up hover interaction ////////////////
         //////////////////////////////////////////////////////////////
@@ -582,7 +714,7 @@ function create_top2000_visual() {
             if (found) { 
                 d3.event.preventDefault();
                 show_highlight_artist(found) 
-            } else if(width < ww) { reset_chart() } //On a drag it doesn't reset for smaller screens
+            } else if(width < ww || ww > 500) { reset_chart() } //On a drag it doesn't reset for smaller screens
 
         })//on mousemove
 
@@ -630,9 +762,10 @@ function create_top2000_visual() {
             //Remove the highlighting lines and circles
             chart_group.selectAll(".artist-circle-group, .artist-path").remove()
             hover_text_group.style("opacity", 0)
-
+            
             //Hide top 10
             top10.style("opacity", 0)
+            annotation_group.style("opacity", 0)
             size_circles.filter(function(d,i) { return i <= 1; })
                 .style("stroke-opacity", 0)
 
@@ -768,6 +901,7 @@ function create_top2000_visual() {
 
             //Highlight the top 10 songs
             top10.style("opacity", 1)
+            annotation_group.style("opacity", 1)
             size_circles
                 .filter(function(d,i) { return i <= 1; })
                 .style("stroke-opacity", 1)
