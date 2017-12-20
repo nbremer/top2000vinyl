@@ -67,6 +67,7 @@ function create_top2000_visual() {
 
     //Test for capturing mouse events
     var is_red = true;
+    var is_blue = true;
     var background_rect = chart.append("rect")
         .attr("class", "background-rect")
         .attr("x", -width/2)
@@ -77,6 +78,10 @@ function create_top2000_visual() {
         .on("touchmove mousemove", function() {
             d3.select(this).style("fill", is_red ? "orange" : "red");
             is_red = !is_red
+        })
+        .on("click", function() {
+            d3.select(this).style("fill", is_blue ? "aqua" : "navy");
+            is_blue = !is_blue
         })
 
     return;
@@ -598,7 +603,7 @@ function create_top2000_visual() {
             .radius(function (d) { return d.radius; })
 
         svg.on("touchmove mousemove", function () {
-            //title.style("fill","blue"); 
+            title.style("fill","blue"); 
             d3.event.stopPropagation();
 
             //Find the nearest song to the mouse, within a distance of X pixels
@@ -609,7 +614,7 @@ function create_top2000_visual() {
                 d3.event.preventDefault();
                 show_highlight_artist(found) 
             } else if(width < ww) { 
-                //title.style("fill","green"); 
+                title.style("fill","green"); 
                 reset_chart() 
             } //On a drag it doesn't reset for smaller screens
 
@@ -617,7 +622,7 @@ function create_top2000_visual() {
 
         //Mostly for mobile - if you click anywhere outside of a circle, it resets
         svg.on("click", function() {
-            //title.style("fill","orange");
+            title.style("fill","orange");
             d3.event.stopPropagation();
 
             //Find the nearest song to the mouse, within a distance of X pixels
@@ -627,7 +632,7 @@ function create_top2000_visual() {
 
             if (found) { show_highlight_artist(found) } 
             else { 
-                // title.style("fill","pink"); 
+                title.style("fill","pink"); 
                 reset_chart() 
             }//else
         })//on click
