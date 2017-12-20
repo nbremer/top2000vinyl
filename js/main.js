@@ -1,14 +1,13 @@
 // TODO: Annotate the top 10 songs?
+// TODO: Bug on chrome??
 
 // Finalize
 // TODO: Turn all English words into Dutch version
-// TODO: Fill in header meta data + create image for sharing
+// TODO: Fill in header meta data + create image for sharing if title is final
 
 function create_top2000_visual() {
 
     var container = d3.select("#chart")
-    //Remove all that was before
-    container.selectAll("svg, canvas").remove();
 
     var pi2 = 2*Math.PI,
         pi = Math.PI,
@@ -18,8 +17,7 @@ function create_top2000_visual() {
     ///////////////////////// Set up sizes ///////////////////////
     ////////////////////////////////////////////////////////////// 
 
-    var base_width = 1400,
-        base_height = 1400
+    var base_width = 1400
 
     var ww = window.innerWidth,
         wh = window.innerHeight
@@ -44,7 +42,6 @@ function create_top2000_visual() {
     //////////////////////// Create SVG //////////////////////////
     ////////////////////////////////////////////////////////////// 
 
-    console.log(ww, width, wh, height)
     container
         .style("width", width + "px")
         .style("height", height + "px");
@@ -68,24 +65,22 @@ function create_top2000_visual() {
     var chart = svg.append("g")
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
 
-    //Test for capturing mouse events
-    var background_rect = chart.append("rect")
-        .attr("class", "background-rect")
-        .attr("x", -width/2)
-        .attr("y", -height/2)
-        .attr("width", width)
-        .attr("height", height)
+    // //Test for capturing mouse events
+    // var background_rect = chart.append("rect")
+    //     .attr("class", "background-rect")
+    //     .attr("x", -width/2)
+    //     .attr("y", -height/2)
+    //     .attr("width", width)
+    //     .attr("height", height)
 
     //If the chart is wider than the screen, make sure the left side is flush with the window
-    if(width > ww) {
-        // d3.selectAll("svg, canvas")
-        //     .style("left", "0%")
-        //     .style("transform", "translateX(0%)")
-    } else {
-        d3.selectAll("svg, canvas")
-            .style("left", "50%")
-            .style("transform", "translateX(-50%)")
-    }//else
+    if(width < ww) {
+        d3.selectAll("svg, canvas").style("left", "50%")
+        d3.selectAll("canvas").style("transform", "translateX(-50%)")
+        //Can't do translateX on svg as well, due to Firefox bug with d3.mouse and transforms done on styling
+        //https://github.com/d3/d3/issues/2771
+        svg.attr("transform", "translate(" + -(width/2) + ",0)")
+    }//if
 
     //////////////////////////////////////////////////////////////
     //////////////// Initialize helpers and scales ///////////////
@@ -608,13 +603,13 @@ function create_top2000_visual() {
         })//on mousemove
 
         //Mostly for mobile - if you click anywhere outside of a circle, it resets
-        background_rect.on("click", function() {
+        svg.on("click", function() {
             //title.style("fill","orange");
             d3.event.stopPropagation();
 
             //Find the nearest song to the mouse, within a distance of X pixels
             var m = d3.mouse(this);
-            var found = diagram.find(m[0], m[1], 50 * size_factor);
+            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
             // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
             if (found) { show_highlight_artist(found) } 
