@@ -1,5 +1,4 @@
 // TODO: Annotate the top 10 songs?
-// TODO: Bug on chrome??
 
 // Finalize
 // TODO: Turn all English words into Dutch version
@@ -21,8 +20,6 @@ function create_top2000_visual() {
 
     var ww = window.innerWidth,
         wh = window.innerHeight
-
-    console.log(ww, wh)
 
     var width;
     if(wh < ww) {
@@ -121,17 +118,19 @@ function create_top2000_visual() {
         .range([0.2,0.3,0.4,0.5])
         .clamp(true);
 
+    //Line function to draw the lines between songs from the same artist
+    var line = d3.lineRadial()
+        .angle(function (d) { return d.angle; })
+        .radius(function (d) { return d.radius; })
+
     //What language to show
     var lang = getQueryVariable("lang"); //nl or en
     if(lang === "nl") {
         d3.select(".credit.nl").style("display","flex");
-        d3.select(".sub-title.nl").style("display","inline");
-        d3.selectAll(".credit.en, .sub-title.en").style("display","none");
-    } else {
-        d3.select(".credit.en").style("display","flex");
-        d3.select(".sub-title.en").style("display","inline");
-        d3.selectAll(".credit.nl, .sub-title.nl").style("display","none");
-    }//else
+        d3.selectAll(".sub-title.nl").style("display","inline");
+        d3.selectAll(".explanation.nl").style("display","block");
+        d3.selectAll(".credit.en, .sub-title.en, .explanation.en").style("display","none");
+    }//if
 
     //////////////////////////////////////////////////////////////
     //////////////////// Set up hover voronoi ////////////////////
@@ -480,12 +479,14 @@ function create_top2000_visual() {
         //     return 0;
         // })
 
-        data = data.filter(function(d) { return d.releaseYear >= start_year; })
-
         data_artist.forEach(function (d,i) {
             d.rank = +d.rank;
             d.releaseYear = +d.releaseYear;
         })//forEach
+
+        //Just in case, take out any songs from before the start_year of the circle
+        data = data.filter(function(d) { return d.releaseYear >= start_year; })
+        data_artist = data_artist.filter(function(d) { return d.releaseYear >= start_year; })
 
         //////////////////////////////////////////////////////////////
         /////////////// Create the circles for each song /////////////
@@ -507,9 +508,9 @@ function create_top2000_visual() {
                 //Save some position variables
                 s.angle = a;
                 s.radius = inner_radius + step_size * j;
+                //Rounding for the voronoi later, Otherwise it can throw errors
                 s.x = _.round(s.radius * Math.cos(a - pi1_2),2);
                 s.y = _.round(s.radius * Math.sin(a - pi1_2),2);
-                //TODO Also save this information in the "artist" dataset
 
                 //Draw the bigger - rank based circles
                 ctx.globalAlpha = opacity_scale(s.rank);
@@ -570,11 +571,6 @@ function create_top2000_visual() {
         //////////////////////////////////////////////////////////////
         //////////////////// Set-up hover interaction ////////////////
         //////////////////////////////////////////////////////////////
-
-        //Line function to draw the lines between songs from the same artist
-        var line = d3.lineRadial()
-            .angle(function (d) { return d.angle; })
-            .radius(function (d) { return d.radius; })
 
         svg.on("touchmove mousemove", function() {
             d3.event.stopPropagation();
