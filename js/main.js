@@ -526,15 +526,16 @@ function create_top2000_visual() {
                 ctx.arc(s.x, s.y, radius_scale(s.rank), 0, pi2, false);
                 ctx.closePath();
                 ctx.fill();
-
-                //Draw the tiny circle in the center
-                ctx.globalAlpha = 1;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, mini_circle_radius, 0, pi2, false);
-                ctx.closePath();
-                ctx.fill();
             })//forEach
 
+            //Draw the tiny circle in the center
+            ctx.globalAlpha = 1;
+            ctx.beginPath();
+            data_year.forEach(function(s,j) {
+                ctx.arc(s.x, s.y, mini_circle_radius, 0, pi2, false);
+            })//forEach
+            ctx.closePath();
+            ctx.fill();
 
             //Add small lines to year axis
             if(_.indexOf(year_axis, i) >= 0) {
@@ -579,9 +580,6 @@ function create_top2000_visual() {
         //////////////// Create voronoi hover interaction ////////////
         //////////////////////////////////////////////////////////////
 
-
-        return;
-
         //Calculate the voronoi polygons
         diagram = voronoi(data);
         polygons = diagram.polygons();
@@ -603,9 +601,11 @@ function create_top2000_visual() {
             .angle(function (d) { return d.angle; })
             .radius(function (d) { return d.radius; })
 
+        return;
+
         svg.on("touchmove mousemove", function () {
             title.style("fill","blue"); 
-            d3.event.stopPropagation();
+            //d3.event.stopPropagation();
 
             //Find the nearest song to the mouse, within a distance of X pixels
             var m = d3.mouse(this);
@@ -624,7 +624,7 @@ function create_top2000_visual() {
         //Mostly for mobile - if you click anywhere outside of a circle, it resets
         svg.on("click", function() {
             title.style("fill","orange");
-            d3.event.stopPropagation();
+            //d3.event.stopPropagation();
 
             //Find the nearest song to the mouse, within a distance of X pixels
             var m = d3.mouse(this);
