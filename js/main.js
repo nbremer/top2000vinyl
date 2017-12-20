@@ -84,8 +84,6 @@ function create_top2000_visual() {
             is_blue = !is_blue
         })
 
-    return;
-
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width < ww) {
         d3.selectAll("svg, canvas").style("left", "50%")
@@ -460,6 +458,8 @@ function create_top2000_visual() {
         .style("font-size", function (d, i) { return i <= 3 ? (size_font[i] * size_factor) + "px" : (11 * size_factor) + "px"; })
         .text(function (d) { return d; })
 
+        return;
+        
     //////////////////////////////////////////////////////////////
     /////////////////////// Read in the data /////////////////////
     //////////////////////////////////////////////////////////////
