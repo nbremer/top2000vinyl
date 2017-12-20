@@ -77,9 +77,14 @@ function create_top2000_visual() {
     if(width < ww) {
         d3.selectAll("svg, canvas").style("left", "50%")
         d3.selectAll("canvas").style("transform", "translateX(-50%)")
-        //Can't do translateX on svg as well, due to Firefox bug with d3.mouse and transforms done on styling
-        //https://github.com/d3/d3/issues/2771
-        svg.attr("transform", "translate(" + -(width/2) + ",0)")
+
+        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+            //Can't do translateX on svg as well, due to Firefox bug with d3.mouse and transforms done on styling
+            //https://github.com/d3/d3/issues/2771
+            svg.attr("transform", "translate(" + -(width/2) + ",0)")
+        } else {
+            d3.selectAll("svg").style("transform", "translateX(-50%)")
+        }
     }//if
 
     //////////////////////////////////////////////////////////////
