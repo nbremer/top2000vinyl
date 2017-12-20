@@ -897,7 +897,6 @@ function create_top2000_visual() {
         function reset_chart() {
             //Remove the highlighting lines and circles
             chart_group.selectAll(".artist-circle-group, .artist-path").remove()
-            hover_text_group.style("opacity", 0)
 
             //Highlight the top 10 songs
             top10.style("opacity", 1)
@@ -905,6 +904,11 @@ function create_top2000_visual() {
             size_circles
                 .filter(function(d,i) { return i <= 1; })
                 .style("stroke-opacity", 1)
+
+            //Reset center text
+            hover_artist.text(lang === "nl" ? "Alle 2000 nummers" : "All 2000 songs")
+            hover_song.text(lang === "nl" ? "hover|click op een cirkel..." : "hover|click a circle and see...")
+            hover_rank.text("")
         }//function reset_chart
 
     }//function draw
