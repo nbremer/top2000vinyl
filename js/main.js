@@ -73,7 +73,7 @@ function create_top2000_visual() {
         .attr("x", -width/2)
         .attr("y", -height/2)
         .attr("width", width)
-        .attr("height", height)
+        .attr("height", height/3)
         .style("fill","red")
         .on("touchmove mousemove", function() {
             d3.select(this).style("fill", is_red ? "orange" : "red");
