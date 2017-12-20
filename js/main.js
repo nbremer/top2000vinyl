@@ -1,4 +1,3 @@
-// TODO: Add data for hover highlight same band
 // TODO: Annotate the top 10 songs?
 
 // Finalize
@@ -93,8 +92,8 @@ function create_top2000_visual() {
     //////////////////////////////////////////////////////////////
 
     var num_songs = 2000,
-        start_year = 1954,
-        end_year = 2016;
+        start_year = 1955,
+        end_year = 2017;
 
     var outer_radius = width * 0.45,
         inner_radius = outer_radius * 2.2/7;
@@ -357,7 +356,7 @@ function create_top2000_visual() {
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
         .style("font-size", (55 * size_factor) + "px")
-        .text("TOP 2001");
+        .text("TOP 2000");
 
     //////////////////////////////////////////////////////////////
     ////////////////// Add hover text in center //////////////////
@@ -452,283 +451,335 @@ function create_top2000_visual() {
     /////////////////////// Read in the data /////////////////////
     //////////////////////////////////////////////////////////////
 
-d3.csv("data/top2000_2016.csv", function (error, data) {
-    if (error) throw error;
+    d3.queue()
+        .defer(d3.csv, "data/top2000_2017_rank.csv")
+        .defer(d3.csv, "data/top2000_2017_artist.csv")
+        .await(draw);
 
-    //////////////////////////////////////////////////////////////
-    /////////////////////// Final data prep //////////////////////
-    //////////////////////////////////////////////////////////////
+    function draw(error, data, data_artist) {
+        if (error) throw error;
 
-    data.forEach(function (d,i) {
-        d.rank = +d.rank;
-        d.releaseYear = +d.releaseYear;
-    })//forEach
+        //////////////////////////////////////////////////////////////
+        /////////////////////// Final data prep //////////////////////
+        //////////////////////////////////////////////////////////////
 
-    //Sort from lowest to highest song
-    data.sort(function(a,b) { return b.rank - a.rank; });
-
-    // //Sort alphabetically
-    // data.sort(function(a, b){
-    //     if(a.artist < b.artist) return -1;
-    //     if(a.artist > b.artist) return 1;
-    //     return 0;
-    // })
-
-    data = data.filter(function(d) { return d.releaseYear >= start_year; })
-
-    //////////////////////////////////////////////////////////////
-    /////////////// Create the circles for each song /////////////
-    //////////////////////////////////////////////////////////////
-
-    ctx.fillStyle = "white";
-    //Loop over each year and draw the year circles
-    for(var i = start_year; i <= end_year; i++) {
-
-        var data_year = data.filter(function(s) { return s.releaseYear === i; });
-        var max_height = 0;
-        var a = angle(i);
-
-        //Draw two circles for each song
-        data_year.forEach(function(s,j) {
-            //Keep check of the maximum height for the axis line, if needed
-            if(_.indexOf(year_axis, i) >= 0) max_height = inner_radius + step_size * j + radius_scale(s.rank);
-    
-            //Save some position variables
-            s.angle = a;
-            s.radius = inner_radius + step_size * j;
-            s.x = s.radius * Math.cos(a - pi1_2);
-            s.y = s.radius * Math.sin(a - pi1_2);
-            //TODO Also save this information in the "artist" dataset
-
-            //Draw the bigger - rank based circles
-            ctx.globalAlpha = opacity_scale(s.rank);
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, radius_scale(s.rank), 0, pi2, false);
-            ctx.closePath();
-            ctx.fill();
-
-            //Draw the tiny circle in the center
-            ctx.globalAlpha = 1;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, mini_circle_radius, 0, pi2, false);
-            ctx.closePath();
-            ctx.fill();
+        data.forEach(function (d,i) {
+            d.rank = +d.rank;
+            d.releaseYear = +d.releaseYear;
         })//forEach
 
+        //Sort from lowest to highest song
+        data.sort(function(a,b) { return b.rank - a.rank; });
 
-        //Add small lines to year axis
-        if(_.indexOf(year_axis, i) >= 0) {
-            ctx.strokeStyle = "#c1c1c1";
-            ctx.globalAlpha = 0.4;
-            ctx.lineWidth = 1 * size_factor;
+        // //Sort alphabetically
+        // data.sort(function(a, b){
+        //     if(a.artist < b.artist) return -1;
+        //     if(a.artist > b.artist) return 1;
+        //     return 0;
+        // })
 
-            ctx.rotate(a + pi);
-            ctx.beginPath();
-            ctx.moveTo(0, max_height + 4)
-            ctx.lineTo(0, outer_radius * 0.95);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.rotate(-(a + pi));
+        data = data.filter(function(d) { return d.releaseYear >= start_year; })
 
-            ctx.globalAlpha = 1;
-        }//if
-    }//for i
+        data_artist.forEach(function (d,i) {
+            d.rank = +d.rank;
+            d.releaseYear = +d.releaseYear;
+        })//forEach
 
-    //////////////////////////////////////////////////////////////
-    /////////////////////// Mark top 10 songs ////////////////////
-    //////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////
+        /////////////// Create the circles for each song /////////////
+        //////////////////////////////////////////////////////////////
 
-    //Group for the SVG hover drawings
-    var chart_group = chart.append("g").attr("class","chart-group")
+        ctx.fillStyle = "white";
+        //Loop over each year and draw the year circles
+        for(var i = start_year; i <= end_year; i++) {
 
-    //Add the top 10 in a stroke
-    var top10_group = chart_group.append("g").attr("class","top-10-group");
-    var top10 = top10_group.selectAll(".top-10-circle")
-        .data(data.filter(function(d) { return d.rank <= 10; }))
-        .enter().append("circle")
-        .attr("class", "top-10-circle")
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr("r", function(d) { return radius_scale(d.rank); })
-        .style("fill", "none")
-        .style("stroke", color_red)
-        .style("stroke-width", 1 * size_factor)
-        .style("mix-blend-mode", "screen")
+            var data_year = data.filter(function(s) { return s.releaseYear === i; });
+            var max_height = 0;
+            var a = angle(i);
 
-    //////////////////////////////////////////////////////////////
-    //////////////// Create voronoi hover interaction ////////////
-    //////////////////////////////////////////////////////////////
+            //Draw two circles for each song
+            data_year.forEach(function(s,j) {
+                //Keep check of the maximum height for the axis line, if needed
+                if(_.indexOf(year_axis, i) >= 0) max_height = inner_radius + step_size * j + radius_scale(s.rank);
+        
+                //Save some position variables
+                s.angle = a;
+                s.radius = inner_radius + step_size * j;
+                s.x = s.radius * Math.cos(a - pi1_2);
+                s.y = s.radius * Math.sin(a - pi1_2);
+                //TODO Also save this information in the "artist" dataset
 
-    //Calculate the voronoi polygons
-    diagram = voronoi(data);
-    polygons = diagram.polygons();
+                //Draw the bigger - rank based circles
+                ctx.globalAlpha = opacity_scale(s.rank);
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, radius_scale(s.rank), 0, pi2, false);
+                ctx.closePath();
+                ctx.fill();
 
-    // //Draw the cells
-    // ctx.beginPath();
-    // for (var i = 0, n = polygons.length; i < n; ++i) {
-    //     var cell = polygons[i];
-    //     if (!cell) continue;
-    //     ctx.moveTo(cell[0][0], cell[0][1]);
-    //     for (var j = 1, m = cell.length; j < m; ++j) ctx.lineTo(cell[j][0], cell[j][1]);
-    //     ctx.closePath();
-    // }//for i
-    // ctx.strokeStyle = "#000";
-    // ctx.stroke();
+                //Draw the tiny circle in the center
+                ctx.globalAlpha = 1;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, mini_circle_radius, 0, pi2, false);
+                ctx.closePath();
+                ctx.fill();
+            })//forEach
 
-    //Line function to draw the lines between songs from the same artist
-    var line = d3.lineRadial()
-        .angle(function (d) { return d.angle; })
-        .radius(function (d) { return d.radius; })
 
-    svg.on("touchmove mousemove", function () {
-        //title.style("fill","blue"); 
-        d3.event.stopPropagation();
+            //Add small lines to year axis
+            if(_.indexOf(year_axis, i) >= 0) {
+                ctx.strokeStyle = "#c1c1c1";
+                ctx.globalAlpha = 0.4;
+                ctx.lineWidth = 1 * size_factor;
 
-        //Find the nearest song to the mouse, within a distance of X pixels
-        var m = d3.mouse(this);
-        var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+                ctx.rotate(a + pi);
+                ctx.beginPath();
+                ctx.moveTo(0, max_height + 4)
+                ctx.lineTo(0, outer_radius * 0.95);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.rotate(-(a + pi));
 
-        if (found) { 
-            d3.event.preventDefault();
-            show_highlight_artist(found) 
-        } else if(width < ww) { 
-            //title.style("fill","green"); 
-            reset_chart() 
-        } //On a drag it doesn't reset for smaller screens
+                ctx.globalAlpha = 1;
+            }//if
+        }//for i
 
-    })//on mousemove
+        //////////////////////////////////////////////////////////////
+        /////////////////////// Mark top 10 songs ////////////////////
+        //////////////////////////////////////////////////////////////
 
-    //Mostly for mobile - if you click anywhere outside of a circle, it resets
-    background_rect.on("click", function() {
-        //title.style("fill","orange");
-        d3.event.stopPropagation();
+        //Group for the SVG hover drawings
+        var chart_group = chart.append("g").attr("class","chart-group")
 
-        //Find the nearest song to the mouse, within a distance of X pixels
-        var m = d3.mouse(this);
-        var found = diagram.find(m[0], m[1], 50 * size_factor);
-        // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-
-        if (found) { show_highlight_artist(found) } 
-        else { 
-            // title.style("fill","pink"); 
-            reset_chart() 
-        }//else
-    })//on click
-
-    //Mostly for mobile - to reset al when you click on mobile
-    //d3.select("body").on("click", reset_chart);
-
-    //////////////////////////////////////////////////////////////
-    ///////////////////// Interaction functions //////////////////
-    //////////////////////////////////////////////////////////////
-
-    //Function to highlight the hovered artist
-    function show_highlight_artist(found) {
-        //Remove the highlighting lines and circles
-        chart_group.selectAll(".artist-circle-group, .artist-path").remove()
-        hover_text_group.style("opacity", 0)
-
-        //Hide top 10
-        top10.style("opacity", 0)
-        size_circles.filter(function(d,i) { return i <= 1; })
-            .style("stroke-opacity", 0)
-
-        //Get all the songs from this artist
-        var artist = data
-            .filter(function(d) { return d.artist === data[found.index].artist; })
-            .sort(function(a,b) { return a.releaseYear - b.releaseYear || b.rank - a.rank; });
-
-        //Add a line between all the songs of that artist
-        if (artist.length > 1) {
-            // var path = "M"
-            // for (var k = 0; k < artist.length - 1; k++) {
-            //     var x1 = _.round(artist[k].x,2 ),
-            //         y1 = _.round(artist[k].y, 2),
-            //         x2 = _.round(artist[k+1].x, 2),
-            //         y2 = _.round(artist[k+1].y, 2),
-            //         dx = x1 - x2,
-            //         dy = y1 - y2;
-
-            //     var curve = _.round(Math.sqrt(dx * dx + dy * dy) * 0.53);
-
-            //     //Get the angles to determine the optimum sweep flag
-            //     var a1 = angle(artist[k].releaseYear),
-            //         a2 = angle(artist[k+1].releaseYear);
-            //     var da = (a2 - a1) / pi;
-
-            //     var sweepFlag = 1;
-            //     if ((da > -1 && da <= 0) || (da > 1 && da <= 2)) sweepFlag = 0;
-
-            //     //Add the new arced section to the path
-            //     path = path + x1 + "," + y1 + " A" + curve + "," + curve + " 0 0 " + sweepFlag + " ";
-            // }//for i
-            // //Complete the path
-            // path = path + x2 + "," + y2;
-
-            // //Draw the path
-            // chart_group.append("path")
-            //     .attr("class", "artist-path")
-            //     .attr("d", path)
-
-            //Draw the path
-            chart_group.append("path")
-                .datum(artist)
-                .attr("class", "artist-path")
-                .attr("d", line)
-                .style("stroke-width", 2 * size_factor)
-        }//if
-
-        //Now sort so the smallest circles are on top per release year
-        artist.sort(function(a,b) { return a.releaseYear - b.releaseYear || a.rank - b.rank; });
-
-        //Make all the circles of that artist white & stroked
-        var artist_circle_group = chart_group.append("g")
-            .attr("class","artist-circle-group")
-            .style("isolation", "isolate");
-
-        artist_circle_group.selectAll(".artist-circle")
-            .data(artist)
+        //Add the top 10 in a stroke
+        var top10_group = chart_group.append("g").attr("class","top-10-group");
+        var top10 = top10_group.selectAll(".top-10-circle")
+            .data(data.filter(function(d) { return d.rank <= 10; }))
             .enter().append("circle")
-            .attr("class", function (d) {
-                return "artist-circle" + (d.rank === data[found.index].rank ? " hovered-artist-circle" : "");
-            })
-            .attr("cx", function (d) { return d.x; })
-            .attr("cy", function (d) { return d.y; })
-            .attr("r", function (d) { return radius_scale(d.rank); })
-            .style("stroke-width", function(d) { return (d.rank === data[found.index].rank ? 4 : 3) * size_factor; })
+            .attr("class", "top-10-circle")
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; })
+            .attr("r", function(d) { return radius_scale(d.rank); })
+            .style("fill", "none")
+            .style("stroke", color_red)
+            .style("stroke-width", 1 * size_factor)
+            .style("mix-blend-mode", "screen")
 
-        //Make the center circle of the hovered song more visible
-        artist_circle_group.append("circle")
-            .attr("class", "artist-center-circle")
-            .attr("cx", data[found.index].x)
-            .attr("cy", data[found.index].y)
-            .attr("r", mini_circle_radius * 2)
+        //////////////////////////////////////////////////////////////
+        //////////////// Create voronoi hover interaction ////////////
+        //////////////////////////////////////////////////////////////
 
-        //Adjust the title in the center
-        hover_text_group.style("opacity", 1)
-        hover_artist
-            .text(data[found.index].artist)
-            .call(wrap, 2 * inner_radius * 0.7)
-        hover_song
-            .text(data[found.index].title)
-            .call(wrap, 2 * inner_radius * 0.5)
-        hover_rank.text( (lang === "nl" ? "positie |" : "rank | ") + data[found.index].rank)
-    }//function show_highlight_artist
+        //Calculate the voronoi polygons
+        diagram = voronoi(data);
+        polygons = diagram.polygons();
 
-    //Function to reset all back to normal
-    function reset_chart() {
-        //Remove the highlighting lines and circles
-        chart_group.selectAll(".artist-circle-group, .artist-path").remove()
-        hover_text_group.style("opacity", 0)
+        // //Draw the cells
+        // ctx.beginPath();
+        // for (var i = 0, n = polygons.length; i < n; ++i) {
+        //     var cell = polygons[i];
+        //     if (!cell) continue;
+        //     ctx.moveTo(cell[0][0], cell[0][1]);
+        //     for (var j = 1, m = cell.length; j < m; ++j) ctx.lineTo(cell[j][0], cell[j][1]);
+        //     ctx.closePath();
+        // }//for i
+        // ctx.strokeStyle = "#000";
+        // ctx.stroke();
 
-        //Highlight the top 10 songs
-        top10.style("opacity", 1)
-        size_circles
-            .filter(function(d,i) { return i <= 1; })
-            .style("stroke-opacity", 1)
-    }//function reset_chart
+        //Line function to draw the lines between songs from the same artist
+        var line = d3.lineRadial()
+            .angle(function (d) { return d.angle; })
+            .radius(function (d) { return d.radius; })
 
-})//d3.csv
+        svg.on("touchmove mousemove", function () {
+            //title.style("fill","blue"); 
+            d3.event.stopPropagation();
+
+            //Find the nearest song to the mouse, within a distance of X pixels
+            var m = d3.mouse(this);
+            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+
+            if (found) { 
+                d3.event.preventDefault();
+                show_highlight_artist(found) 
+            } else if(width < ww) { 
+                //title.style("fill","green"); 
+                reset_chart() 
+            } //On a drag it doesn't reset for smaller screens
+
+        })//on mousemove
+
+        //Mostly for mobile - if you click anywhere outside of a circle, it resets
+        background_rect.on("click", function() {
+            //title.style("fill","orange");
+            d3.event.stopPropagation();
+
+            //Find the nearest song to the mouse, within a distance of X pixels
+            var m = d3.mouse(this);
+            var found = diagram.find(m[0], m[1], 50 * size_factor);
+            // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+
+            if (found) { show_highlight_artist(found) } 
+            else { 
+                // title.style("fill","pink"); 
+                reset_chart() 
+            }//else
+        })//on click
+
+        //Mostly for mobile - to reset al when you click on mobile
+        //d3.select("body").on("click", reset_chart);
+
+        //////////////////////////////////////////////////////////////
+        ///////////////////// Interaction functions //////////////////
+        //////////////////////////////////////////////////////////////
+
+        //Function to highlight the hovered artist
+        function show_highlight_artist(found) {
+            //Remove the highlighting lines and circles
+            chart_group.selectAll(".artist-circle-group, .artist-path").remove()
+            hover_text_group.style("opacity", 0)
+
+            //Hide top 10
+            top10.style("opacity", 0)
+            size_circles.filter(function(d,i) { return i <= 1; })
+                .style("stroke-opacity", 0)
+
+            //////////////////////////////////////////////////////////////
+            /////////////////////// Draw artist paths ////////////////////
+            //////////////////////////////////////////////////////////////
+
+            //Get all the songs from this artist or artists
+            var artists = data_artist.filter(function(d) { return d.rank === data[found.index].rank; })
+
+            //Number of Top 2000 songs per artist
+            artists.forEach(function(d,i) {
+                d.num_songs = data_artist.filter(function(a) { return a.artist === d.artist; }).length
+            })//forEach
+            //Sort from the artist with most songs to fewest
+            artists.sort(function(a,b) { return b.num_songs - a.num_songs; });
+
+            //Loop over each artist and draw a line
+            var songs_unique = [];
+            artists.forEach(function(d,i) {
+                
+                //Get this artists data and sort on release year and decreasing rank
+                var artist = data_artist
+                    .filter(function(a) { return a.artist === d.artist; })
+                    .sort(function(a,b) { return a.releaseYear - b.releaseYear || b.rank - a.rank; });
+
+                //Get the radius and angle
+                artist.forEach(function(a,k) {
+                    var original = _.find(data, function(o) { return o.rank === a.rank; })
+                    a.radius = original.radius
+                    a.angle = original.angle
+                    songs_unique.push(a.rank)
+                })//forEach
+
+                //Add a line between all the songs of that artist
+                if (artist.length > 1) {
+                    // var path = "M"
+                    // for (var k = 0; k < artist.length - 1; k++) {
+                    //     var x1 = _.round(artist[k].x,2 ),
+                    //         y1 = _.round(artist[k].y, 2),
+                    //         x2 = _.round(artist[k+1].x, 2),
+                    //         y2 = _.round(artist[k+1].y, 2),
+                    //         dx = x1 - x2,
+                    //         dy = y1 - y2;
+
+                    //     var curve = _.round(Math.sqrt(dx * dx + dy * dy) * 0.53);
+
+                    //     //Get the angles to determine the optimum sweep flag
+                    //     var a1 = angle(artist[k].releaseYear),
+                    //         a2 = angle(artist[k+1].releaseYear);
+                    //     var da = (a2 - a1) / pi;
+
+                    //     var sweepFlag = 1;
+                    //     if ((da > -1 && da <= 0) || (da > 1 && da <= 2)) sweepFlag = 0;
+
+                    //     //Add the new arced section to the path
+                    //     path = path + x1 + "," + y1 + " A" + curve + "," + curve + " 0 0 " + sweepFlag + " ";
+                    // }//for i
+                    // //Complete the path
+                    // path = path + x2 + "," + y2;
+
+                    // //Draw the path
+                    // chart_group.append("path")
+                    //     .attr("class", "artist-path")
+                    //     .attr("d", path)
+
+                    //Draw the path
+                    chart_group.append("path")
+                        .datum(artist)
+                        .attr("class", "artist-path")
+                        .attr("d", line)
+                        .style("stroke-width", 2 * size_factor)
+                        .style("stroke-dasharray", i > 0 ? "0,5" : null)
+                }//if
+
+            })//forEach
+
+            //////////////////////////////////////////////////////////////
+            /////////////////////// Draw song circles ////////////////////
+            //////////////////////////////////////////////////////////////
+
+            //Get all the unique songs if these artists
+            songs_unique = _.uniq(songs_unique);
+
+            var songs = data.filter(function(s) { return _.indexOf(songs_unique,s.rank) >= 0; })
+
+            //Now sort so the smallest circles are on top per release year
+            songs.sort(function(a,b) { return a.releaseYear - b.releaseYear || a.rank - b.rank; });
+
+            //Create group for the song circles
+            var artist_circle_group = chart_group.append("g")
+                .attr("class","artist-circle-group")
+                .style("isolation", "isolate");
+            //Make all the circles of that artist white & stroked
+            artist_circle_group.selectAll(".artist-circle")
+                .data(songs)
+                .enter().append("circle")
+                .attr("class", function (d) {
+                    return "artist-circle" + (d.rank === data[found.index].rank ? " hovered-artist-circle" : "");
+                })
+                .attr("cx", function (d) { return d.x; })
+                .attr("cy", function (d) { return d.y; })
+                .attr("r", function (d) { return radius_scale(d.rank); })
+                .style("stroke-width", function(d) { return (d.rank === data[found.index].rank ? 4 : 3) * size_factor; })
+
+            //Make the center circle of the hovered song more visible
+            artist_circle_group.append("circle")
+                .attr("class", "artist-center-circle")
+                .attr("cx", data[found.index].x)
+                .attr("cy", data[found.index].y)
+                .attr("r", mini_circle_radius * 2)
+
+            //////////////////////////////////////////////////////////////
+            ////////////////////// Adjust center text ////////////////////
+            //////////////////////////////////////////////////////////////
+
+            //Adjust the title in the center
+            hover_text_group.style("opacity", 1)
+            hover_artist
+                .text(data[found.index].artist)
+                .call(wrap, 2 * inner_radius * 0.7)
+            hover_song
+                .text(data[found.index].title)
+                .call(wrap, 2 * inner_radius * 0.5)
+            hover_rank.text( (lang === "nl" ? "positie |" : "rank | ") + data[found.index].rank)
+        }//function show_highlight_artist
+
+        //Function to reset all back to normal
+        function reset_chart() {
+            //Remove the highlighting lines and circles
+            chart_group.selectAll(".artist-circle-group, .artist-path").remove()
+            hover_text_group.style("opacity", 0)
+
+            //Highlight the top 10 songs
+            top10.style("opacity", 1)
+            size_circles
+                .filter(function(d,i) { return i <= 1; })
+                .style("stroke-opacity", 1)
+        }//function reset_chart
+
+    }//function draw
 
 }//function create_top2000_visual
 
