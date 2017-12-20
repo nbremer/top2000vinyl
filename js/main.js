@@ -65,13 +65,21 @@ function create_top2000_visual() {
     var chart = svg.append("g")
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
 
-    // //Test for capturing mouse events
-    // var background_rect = chart.append("rect")
-    //     .attr("class", "background-rect")
-    //     .attr("x", -width/2)
-    //     .attr("y", -height/2)
-    //     .attr("width", width)
-    //     .attr("height", height)
+    //Test for capturing mouse events
+    var is_red = true;
+    var background_rect = chart.append("rect")
+        .attr("class", "background-rect")
+        .attr("x", -width/2)
+        .attr("y", -height/2)
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill","red")
+        .on("touchmove mousemove", function() {
+            d3.select(this).style("fill", is_red ? "orange" : "red");
+            is_red = !is_red
+        })
+
+    return;
 
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width < ww) {
@@ -84,7 +92,7 @@ function create_top2000_visual() {
             svg.attr("transform", "translate(" + -(width/2) + ",0)")
         } else {
             d3.selectAll("svg").style("transform", "translateX(-50%)")
-        }
+        }//else
     }//if
 
     //////////////////////////////////////////////////////////////
