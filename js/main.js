@@ -75,10 +75,10 @@ function create_top2000_visual() {
         .attr("width", width)
         .attr("height", height/3)
         .style("fill","red")
-        .on("touchmove mousemove", function() {
-            d3.select(this).style("fill", is_red ? "orange" : "red");
-            is_red = !is_red
-        })
+        // .on("touchmove mousemove", function() {
+        //     d3.select(this).style("fill", is_red ? "orange" : "red");
+        //     is_red = !is_red
+        // })
         .on("click", function() {
             d3.select(this).style("fill", is_blue ? "aqua" : "navy");
             is_blue = !is_blue
@@ -601,42 +601,44 @@ function create_top2000_visual() {
             .angle(function (d) { return d.angle; })
             .radius(function (d) { return d.radius; })
 
-        return;
-
-        svg.on("touchmove mousemove", function () {
+        background_rect.on("touchmove mousemove", function () {
             title.style("fill","blue"); 
+            
+            d3.select(this).style("fill", is_red ? "orange" : "red");
+            is_red = !is_red
+
             //d3.event.stopPropagation();
 
-            //Find the nearest song to the mouse, within a distance of X pixels
-            var m = d3.mouse(this);
-            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+            // //Find the nearest song to the mouse, within a distance of X pixels
+            // var m = d3.mouse(this);
+            // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
-            if (found) { 
-                d3.event.preventDefault();
-                show_highlight_artist(found) 
-            } else if(width < ww) { 
-                title.style("fill","green"); 
-                reset_chart() 
-            } //On a drag it doesn't reset for smaller screens
+            // if (found) { 
+            //     d3.event.preventDefault();
+            //     show_highlight_artist(found) 
+            // } else if(width < ww) { 
+            //     title.style("fill","green"); 
+            //     reset_chart() 
+            // } //On a drag it doesn't reset for smaller screens
 
         })//on mousemove
 
-        //Mostly for mobile - if you click anywhere outside of a circle, it resets
-        svg.on("click", function() {
-            title.style("fill","orange");
-            //d3.event.stopPropagation();
+        // //Mostly for mobile - if you click anywhere outside of a circle, it resets
+        // svg.on("click", function() {
+        //     title.style("fill","orange");
+        //     //d3.event.stopPropagation();
 
-            //Find the nearest song to the mouse, within a distance of X pixels
-            var m = d3.mouse(this);
-            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-            // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+        //     //Find the nearest song to the mouse, within a distance of X pixels
+        //     var m = d3.mouse(this);
+        //     var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+        //     // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
 
-            if (found) { show_highlight_artist(found) } 
-            else { 
-                title.style("fill","pink"); 
-                reset_chart() 
-            }//else
-        })//on click
+        //     if (found) { show_highlight_artist(found) } 
+        //     else { 
+        //         title.style("fill","pink"); 
+        //         reset_chart() 
+        //     }//else
+        // })//on click
 
         //Mostly for mobile - to reset al when you click on mobile
         //d3.select("body").on("click", reset_chart);
