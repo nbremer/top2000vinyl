@@ -22,6 +22,8 @@ function create_top2000_visual() {
     var ww = window.innerWidth,
         wh = window.innerHeight
 
+    console.log(ww, wh)
+
     var width;
     if(wh < ww) {
         width = ww;
@@ -105,7 +107,7 @@ function create_top2000_visual() {
             // } //On a drag it doesn't reset for smaller screens
 
         })//on mousemove
-        
+
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width < ww) {
         d3.selectAll("svg, canvas").style("left", "50%")
@@ -389,7 +391,7 @@ function create_top2000_visual() {
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
         .style("font-size", (55 * size_factor) + "px")
-        .text("TOP 2000");
+        .text("TOP 2002");
 
     //////////////////////////////////////////////////////////////
     ////////////////// Add hover text in center //////////////////
@@ -603,8 +605,8 @@ function create_top2000_visual() {
         //////////////////////////////////////////////////////////////
 
         //Calculate the voronoi polygons
-        diagram = voronoi(data);
-        polygons = diagram.polygons();
+        // diagram = voronoi(data);
+        // polygons = diagram.polygons();
 
         // //Draw the cells
         // ctx.beginPath();
