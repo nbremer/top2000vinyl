@@ -301,18 +301,18 @@ function create_top2000_visual() {
         .attr("id", "axis-year-path")
         .style("display","none")
         .attr("d", function(d) {
-            var rad = outer_radius * 1.045;
+            var rad = outer_radius * 1.05;
             return "M" + 0 + "," + rad + " A" + rad + "," + rad + " 0 1 1 " + 0.01 + "," + rad;
         });
     //Add title to the path
     axis_year_group.append("text")
         .attr("class", "axis-year-title")
         .attr("dy", "0.35em")
-        .style("font-size", (18 * size_factor) + "px")
+        .style("font-size", (20 * size_factor) + "px")
         .append("textPath")
         .attr("xlink:href", "#axis-year-path")
         .attr("startOffset", "38%")
-        .html(lang === "nl" ? "Jaar waarin het liedje is uitgekomen &#8594;" : "The release year of a song &#8594;");
+        .html(lang === "nl" ? "Jaar waarin het liedje is uitgebracht &#8594;" : "The release year of a song &#8594;");
 
     //////////////////////////////////////////////////////////////
     /////////////////// Add title in the center //////////////////

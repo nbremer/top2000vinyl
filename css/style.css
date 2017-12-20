@@ -27,7 +27,7 @@ body {
 }
 
 .sub-title {
-    font-weight: 300;
+    /* font-weight: 300; */
     font-size: 18px;
     color: #797979;
     line-height: 150%;
@@ -48,8 +48,8 @@ body {
     margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
-    max-width: 650px;
-    font-size: 12px;
+    max-width: 700px;
+    font-size: 15px;
     line-height: 150%;
     color: #717171;
     text-align: center;
@@ -138,7 +138,9 @@ canvas {
 
 .axis-year-title {
     text-anchor: middle;
-    fill: black;
+    fill: #CB272E;
+    font-weight: 700;
+    font-style: italic;
 }
 
 .axis-year-label {
