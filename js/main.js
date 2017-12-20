@@ -367,7 +367,7 @@ function create_top2000_visual() {
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
         .style("font-size", (55 * size_factor) + "px")
-        .text("TOP 2000");
+        .text("TOP 2001");
 
     //////////////////////////////////////////////////////////////
     ////////////////// Add hover text in center //////////////////
@@ -458,8 +458,6 @@ function create_top2000_visual() {
         .style("font-size", function (d, i) { return i <= 3 ? (size_font[i] * size_factor) + "px" : (11 * size_factor) + "px"; })
         .text(function (d) { return d; })
 
-        return;
-        
     //////////////////////////////////////////////////////////////
     /////////////////////// Read in the data /////////////////////
     //////////////////////////////////////////////////////////////
@@ -580,6 +578,9 @@ function create_top2000_visual() {
         //////////////////////////////////////////////////////////////
         //////////////// Create voronoi hover interaction ////////////
         //////////////////////////////////////////////////////////////
+
+
+        return;
 
         //Calculate the voronoi polygons
         diagram = voronoi(data);
