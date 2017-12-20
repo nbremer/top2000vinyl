@@ -67,24 +67,13 @@ function create_top2000_visual() {
     var chart = svg.append("g")
         .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")")
 
-    //Test for capturing mouse events
-    var is_red = true;
-    var is_blue = true;
-    var background_rect = chart.append("rect")
-        .attr("class", "background-rect")
-        .attr("x", -width/2)
-        .attr("y", -height/2)
-        .attr("width", width)
-        .attr("height", height/3)
-        .style("fill","red")
-        // .on("touchmove mousemove", function() {
-        //     d3.select(this).style("fill", is_red ? "orange" : "red");
-        //     is_red = !is_red
-        // })
-        .on("click", function() {
-            d3.select(this).style("fill", is_blue ? "aqua" : "navy");
-            is_blue = !is_blue
-        })
+    // //Test for capturing mouse events
+    // var background_rect = chart.append("rect")
+    //     .attr("class", "background-rect")
+    //     .attr("x", -width/2)
+    //     .attr("y", -height/2)
+    //     .attr("width", width)
+    //     .attr("height", height)
 
     //If the chart is wider than the screen, make sure the left side is flush with the window
     if(width < ww) {
@@ -369,7 +358,7 @@ function create_top2000_visual() {
         .attr("dy", "0.35em")
         .attr("y", -inner_radius * 0.27)
         .style("font-size", (55 * size_factor) + "px")
-        .text("TOP 2003");
+        .text("TOP 2000");
 
     //////////////////////////////////////////////////////////////
     ////////////////// Add hover text in center //////////////////
@@ -518,8 +507,8 @@ function create_top2000_visual() {
                 //Save some position variables
                 s.angle = a;
                 s.radius = inner_radius + step_size * j;
-                s.x = s.radius * Math.cos(a - pi1_2);
-                s.y = s.radius * Math.sin(a - pi1_2);
+                s.x = _.round(s.radius * Math.cos(a - pi1_2),2);
+                s.y = _.round(s.radius * Math.sin(a - pi1_2),2);
                 //TODO Also save this information in the "artist" dataset
 
                 //Draw the bigger - rank based circles
@@ -530,7 +519,7 @@ function create_top2000_visual() {
                 ctx.fill();
             })//forEach
 
-            //Draw the tiny circle in the center
+            //Draw the tiny circles in the center of each song
             ctx.globalAlpha = 1;
             ctx.beginPath();
             data_year.forEach(function(s,j) {
@@ -579,12 +568,50 @@ function create_top2000_visual() {
             .style("mix-blend-mode", "screen")
 
         //////////////////////////////////////////////////////////////
+        //////////////////// Set-up hover interaction ////////////////
+        //////////////////////////////////////////////////////////////
+
+        //Line function to draw the lines between songs from the same artist
+        var line = d3.lineRadial()
+            .angle(function (d) { return d.angle; })
+            .radius(function (d) { return d.radius; })
+
+        svg.on("touchmove mousemove", function() {
+            d3.event.stopPropagation();
+
+            //Find the nearest song to the mouse, within a distance of X pixels
+            var m = d3.mouse(this);
+            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+
+            if (found) { 
+                d3.event.preventDefault();
+                show_highlight_artist(found) 
+            } else if(width < ww) { reset_chart() } //On a drag it doesn't reset for smaller screens
+
+        })//on mousemove
+
+        //Mostly for mobile - if you click anywhere outside of a circle, it resets
+        svg.on("click", function() {
+            d3.event.stopPropagation();
+
+            //Find the nearest song to the mouse, within a distance of X pixels
+            var m = d3.mouse(this);
+            var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
+
+            if (found) { show_highlight_artist(found) } 
+            else { reset_chart() }//else
+        })//on click
+
+        //Mostly for mobile - to reset al when you click on mobile
+        d3.select("body").on("click", reset_chart);
+
+        //////////////////////////////////////////////////////////////
         //////////////// Create voronoi hover interaction ////////////
         //////////////////////////////////////////////////////////////
 
+        diagram = voronoi(data);
         //Calculate the voronoi polygons
-        // diagram = voronoi(data);
-        // polygons = diagram.polygons();
+        polygons = diagram.polygons();
 
         // //Draw the cells
         // ctx.beginPath();
@@ -597,53 +624,6 @@ function create_top2000_visual() {
         // }//for i
         // ctx.strokeStyle = "#000";
         // ctx.stroke();
-
-        //Line function to draw the lines between songs from the same artist
-        var line = d3.lineRadial()
-            .angle(function (d) { return d.angle; })
-            .radius(function (d) { return d.radius; })
-
-        background_rect.on("touchmove mousemove", function() {
-            title.style("fill","blue"); 
-
-            d3.select(this).style("fill", is_red ? "orange" : "red");
-            is_red = !is_red
-
-            //d3.event.stopPropagation();
-
-            // //Find the nearest song to the mouse, within a distance of X pixels
-            // var m = d3.mouse(this);
-            // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-
-            // if (found) { 
-            //     d3.event.preventDefault();
-            //     show_highlight_artist(found) 
-            // } else if(width < ww) { 
-            //     title.style("fill","green"); 
-            //     reset_chart() 
-            // } //On a drag it doesn't reset for smaller screens
-
-        })//on mousemove
-
-        // //Mostly for mobile - if you click anywhere outside of a circle, it resets
-        // svg.on("click", function() {
-        //     title.style("fill","orange");
-        //     //d3.event.stopPropagation();
-
-        //     //Find the nearest song to the mouse, within a distance of X pixels
-        //     var m = d3.mouse(this);
-        //     var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-        //     // var found = diagram.find(m[0] - width/2, m[1] - height/2, 50 * size_factor);
-
-        //     if (found) { show_highlight_artist(found) } 
-        //     else { 
-        //         title.style("fill","pink"); 
-        //         reset_chart() 
-        //     }//else
-        // })//on click
-
-        //Mostly for mobile - to reset al when you click on mobile
-        //d3.select("body").on("click", reset_chart);
 
         //////////////////////////////////////////////////////////////
         ///////////////////// Interaction functions //////////////////
@@ -729,7 +709,7 @@ function create_top2000_visual() {
                         .attr("class", "artist-path")
                         .attr("d", line)
                         .style("stroke-width", 2 * size_factor)
-                        .style("stroke-dasharray", i > 0 ? "0,5" : null)
+                        .style("stroke-dasharray", i > 0 ? "0," + (5 * size_factor) : null)
                 }//if
 
             })//forEach
