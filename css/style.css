@@ -153,6 +153,10 @@ canvas {
     stroke: #c1c1c1;
 }
 
+.size-legend-title {
+    font-weight: 700;
+    font-style: italic;
+}
 
 .size-legend-label {
     text-anchor: middle;

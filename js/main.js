@@ -26,12 +26,11 @@ function create_top2000_visual() {
         else width = ww/0.8;
     }//else
     width = Math.round(Math.min(base_width, width))
+    //Add padding to the height for the legend
+    var height = width
 
     //How much smaller is this visual than the original
     var size_factor = _.round(width/base_width,3)
-
-    //Add padding to the height for the legend
-    var height = width + (280 * size_factor)
 
     ////////////////////////////////////////////////////////////// 
     //////////////////////// Create SVG //////////////////////////
@@ -39,7 +38,8 @@ function create_top2000_visual() {
 
     container
         .style("width", width + "px")
-        .style("height", height + "px");
+        .style("height", height + "px")
+        .style("margin-top", (120 * size_factor) + "px");
 
     //Canvas
     var canvas = container.append("canvas")
@@ -396,7 +396,7 @@ function create_top2000_visual() {
 
     var size_legend_group = chart.append("g")
         .attr("class", "size-legend-group")
-        .attr("transform", "translate(" + (-width/2 + 40 * size_factor) + "," + (-height/2 + 120 * size_factor) + ")");
+        .attr("transform", "translate(" + (-width/2 + 40 * size_factor) + "," + (-height/2 + 10 * size_factor) + ")");
 
     size_legend_group.append("text")
         .attr("class", "size-legend-title")
