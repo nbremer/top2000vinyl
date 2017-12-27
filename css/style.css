@@ -131,7 +131,7 @@ canvas {
     font-style: italic;
 }
 
-.axis-label {
+.axis-count-label, .axis-count-title  {
     text-anchor: middle;
     fill: #dedede;
 }

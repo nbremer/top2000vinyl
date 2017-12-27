@@ -252,28 +252,45 @@ function create_top2000_visual() {
 
     //Add count axis text on top
     var axis_count_group = chart.append("g").attr("class", "axis-count-group");
-    //Create paths for the axis
+
+    //Add the numbers along the axis circles
+    axis_count_group.selectAll(".axis-count-label")
+        .data(axis.filter(function(d,i) { return i !== 0 && i < axis.length - 1; }))
+        .enter().append("text")
+        .attr("class", "axis-count-label")
+        .attr("transform", function(d) { 
+            var rad = inner_radius + step_size * d;
+            return "rotate(" + 29 + ")translate(0," + -rad + ")"; 
+        })
+        .attr("dy", "-0.4em")
+        .style("font-size", (13 * size_factor) + "px")
+        .text(function(d) { return d; });
+
+    //Create paths for the axis title
     axis_count_group.selectAll("axis-path")
-        .data(axis)
+        .data([73.5,70.5])
         .enter().append("path")
         .attr("class", ".axis-path")
-        .attr("id", function(d) { return "axis-path-" + d; })
+        .attr("id", function(d,i) { return "axis-path-" + i; })
         .style("display","none")
         .attr("d", function(d) {
             var rad = inner_radius + step_size * d; //radius
             return "M" + 0 + "," + -rad + " A" + rad + "," + rad + " 0 1 1 " + -0.01 + "," + -rad;
         });
-    //Add text to axis paths
-    axis_count_group.selectAll(".axis-label")
-        .data(axis.filter(function(d,i) { return i !== 0; }))
+
+    //Add title
+    var axis_count_title = ["Number of songs in Top 2000","released in that year"]
+    if (lang === "nl") axis_count_title = ["Aantal liedjes in de Top 2000","per jaar waarin ze zijn uitgebracht"]
+    axis_count_group.selectAll(".axis-count-title")
+        .data(axis_count_title)
         .enter().append("text")
-        .attr("class", "axis-label")
+        .attr("class", "axis-count-title")
         .attr("dy", "-0.4em")
         .style("font-size", (13 * size_factor) + "px")
         .append("textPath")
-        .attr("xlink:href", function(d) { return "#axis-path-" + d; })
+        .attr("xlink:href", function(d,i) { return "#axis-path-" + i; })
         .attr("startOffset", "8.2%")
-        .text(function(d,i) { return i === axis.length-2 ? lang === "nl" ? "Aantal liedjes" : "Number of songs" : d; });
+        .text(function(d) { return d; });
 
     //////////////////////////////////////////////////////////////
     //////////////////// Add release year axis ///////////////////
