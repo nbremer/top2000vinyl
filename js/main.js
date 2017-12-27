@@ -17,7 +17,7 @@ function create_top2000_visual() {
 
     var width;
     if(wh < ww) {
-        width = ww;
+        width = wh/0.8; //= ww;
     } else {
         if(ww < 500) width = ww/0.5;
         else if(ww < 600) width = ww/0.6;
@@ -37,7 +37,7 @@ function create_top2000_visual() {
     ////////////////////////////////////////////////////////////// 
 
     container
-        .style("width", width + "px")
+        //.style("width", Math.max(ww - 60, width) + "px")
         .style("height", height + "px")
         .style("margin-top", (120 * size_factor) + "px");
 
