@@ -756,7 +756,7 @@ function create_top2000_visual() {
 
         diagram = voronoi(data);
         //Calculate the voronoi polygons
-        polygons = diagram.polygons();
+        // polygons = diagram.polygons();
 
         // //Draw the cells
         // ctx.beginPath();
@@ -767,7 +767,7 @@ function create_top2000_visual() {
         //     for (var j = 1, m = cell.length; j < m; ++j) ctx.lineTo(cell[j][0], cell[j][1]);
         //     ctx.closePath();
         // }//for i
-        // ctx.strokeStyle = "#000";
+        // ctx.strokeStyle = "white";
         // ctx.stroke();
 
         //////////////////////////////////////////////////////////////
